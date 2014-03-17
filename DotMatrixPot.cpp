@@ -2,30 +2,48 @@
 
 static DOTMATRIXPOT pot;
 static DOTMATRIX* dm;
+static DOTMATRIXRANGE* ranges;
+static DOTMATRIXRANGE range;
+static DOTMATRIXPOT start;
 
 DOTMATRIXPOT*
 dmpInit(DOTMATRIX* matrix)
 {
 	pot.c = 0; pot.r = 0;
+	pot.size = size;
 	pot.range = dmpRange;
 	dm = matrix;
 	return &pot;
 }
 
-static DOTMATRIXRANGE* 
-dmpRange(FONTSIZE* size)
-{
-	
+int size(FONTSIZE* size) {
+	return size->h;
 }
 
-DOTMATRIXPOT
-static dmpScanLH(DOTMATRIXPOT* start)	// scan dot matrix to left by horizontal
+DOTMATRIXRANGE*
+dmpRange(DOTMATRIXPOT* start, FONTSIZE* size)
+{
+	DOTMATRIXRANGE range;
+	DOTMATRIXPOT start, end;
+	start = dmpScanLH(start);
+	start = dmpScanLV(start, size);
+	end   = dmpScanRV(start, size);
+	range.tl = start;
+	range.br = end;
+	return &range;
+}
+
+static DOTMATRIXPOT
+dmpScanLH(DOTMATRIXPOT* start)	// scan dot matrix to left by horizontal
 {
 	DOTMATRIXPOT pot;
 	size_t i = 0, j = 0;
-	for (i = start->r; i < dm->r; ++i)
-		for (j = 0; j < dm->c; ++j)
+	for (i = start->r; i < dm->r; ++i) {
+		if (i == start->r) j = start->c;
+		else j = 0;
+		for (; j < dm->c; ++j)
 			if (dm->map[i][j] == 1) goto found;
+	}
 
 	found:
 		pot.r = i;
@@ -33,12 +51,12 @@ static dmpScanLH(DOTMATRIXPOT* start)	// scan dot matrix to left by horizontal
 	return pot;
 }
 
-DOTMATRIXPOT
-static dmpSanLV(DOTMATRIXPOT* start, FONTSIZE* fs)
+static DOTMATRIXPOT
+dmpScanLV(DOTMATRIXPOT* start, FONTSIZE* size)
 {
 	DOTMATRIXPOT pot;
 	pot.c = pot.r = 0;
-	size_t i, j = start->c, stop = fs->h + start->r;
+	size_t i, j = start->c, stop = size->h + start->r;
 	if (dm->r < stop || dm->c == start->c) return pot;
 
 	for (i = start->r; i < stop; ++i) {
@@ -53,13 +71,13 @@ static dmpSanLV(DOTMATRIXPOT* start, FONTSIZE* fs)
 	return pot;
 }
 
-DOTMATRIXPOT
-static dmpSanRV(DOTMATRIXPOT* start, FONTSIZE* fs)
+static DOTMATRIXPOT
+dmpScanRV(DOTMATRIXPOT* start, FONTSIZE* size)
 {
 	DOTMATRIXPOT pot;
 	size_t limit = 0;
 	pot.c = pot.r = 0;
-	size_t i, j = start->c, stop = fs->h + start->r;
+	size_t i, j = start->c, stop = size->h + start->r;
 	if (dm->r < stop || dm->c == start->c) return pot;
 
 	do {
@@ -71,7 +89,7 @@ static dmpSanRV(DOTMATRIXPOT* start, FONTSIZE* fs)
 	} while (limit < 3);
 
 ENDMAT:
-	pot.r = start->r;
+	pot.r = start->r + size->h;
 	pot.c = j - limit;
 	return pot;
 }

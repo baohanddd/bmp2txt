@@ -4,7 +4,8 @@
 typedef struct {
 	size_t r;
 	size_t c;
-	DOTMATRIXPOT* (*range)(FONTSIZE*);
+	int(*size)(FONTSIZE*);
+	DOTMATRIXRANGE*(*range)(FONTSIZE*);
 } DOTMATRIXPOT;
 
 typedef struct {
@@ -24,6 +25,9 @@ reMatSanV(DOTMATRIX* dm, DOTMATRIXPOT* start, FONTSIZE* fs);
 DOTMATRIXPOT*
 corner(FONTSIZE* size);
 
-static DOTMATRIXRANGE* dmpRange(FONTSIZE* size);
+static DOTMATRIXRANGE dmpRange(FONTSIZE* size);
+
+DOTMATRIXPOT
+static dmpScanLV(DOTMATRIXPOT* start, FONTSIZE* fs);
 
 #endif
