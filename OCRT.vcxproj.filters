@@ -42,6 +42,9 @@
     <ClInclude Include="DotMatrixPot.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="scan.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,6 +66,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DotMatrixPot.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="scan.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DotMatrixRange.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DotMatrixCarver.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
