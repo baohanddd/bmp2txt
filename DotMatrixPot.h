@@ -13,6 +13,25 @@ typedef struct {
 	DOTMATRIXPOT br;	// bottom right
 } DOTMATRIXRANGE;
 
+typedef struct {
+	DOTMATRIX dots;
+	FONTSIZE* size;
+	int (*toFile)();
+	wchar_t (*getc)(FontLib*);
+} Font;
+
+typedef struct {
+	DOTMATRIX* dots;
+	FONTSIZE*  size;
+	DOTMATRIXRANGE* ranges;
+} DotMatrixCarver;
+
+typedef struct {
+	int (*open)(TCHAR* libname);
+	wchar_t (*cmp)(const char*);
+	int (*close)();
+} FontLib;
+
 DOTMATRIXPOT
 matSanH(DOTMATRIX* dm, DOTMATRIXPOT* start);
 
@@ -25,7 +44,7 @@ reMatSanV(DOTMATRIX* dm, DOTMATRIXPOT* start, FONTSIZE* fs);
 DOTMATRIXPOT*
 corner(FONTSIZE* size);
 
-static DOTMATRIXRANGE dmpRange(FONTSIZE* size);
+static DOTMATRIXRANGE* dmpRange(FONTSIZE*);
 
 DOTMATRIXPOT
 static dmpScanLV(DOTMATRIXPOT* start, FONTSIZE* fs);

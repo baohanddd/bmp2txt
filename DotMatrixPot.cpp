@@ -3,7 +3,7 @@
 static DOTMATRIXPOT pot;
 static DOTMATRIX* dm;
 static DOTMATRIXRANGE* ranges;
-static DOTMATRIXRANGE range;
+static DOTMATRIXRANGE  range;
 static DOTMATRIXPOT start;
 
 DOTMATRIXPOT*
@@ -21,13 +21,13 @@ int size(FONTSIZE* size) {
 }
 
 DOTMATRIXRANGE*
-dmpRange(DOTMATRIXPOT* start, FONTSIZE* size)
+dmpRange(FONTSIZE* size)
 {
 	DOTMATRIXRANGE range;
-	DOTMATRIXPOT start, end;
-	start = dmpScanLH(start);
-	start = dmpScanLV(start, size);
-	end   = dmpScanRV(start, size);
+	DOTMATRIXPOT end;
+	start = dmpScanLH(&start);
+	start = dmpScanLV(&start, size);
+	end   = dmpScanRV(&start, size);
 	range.tl = start;
 	range.br = end;
 	return &range;
