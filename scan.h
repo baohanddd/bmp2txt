@@ -13,16 +13,6 @@ typedef struct {
 } DotMatrixRanges;
 
 typedef struct {
-	DotMatrixPot tl;	// top left
-	DotMatrixPot br;	// bottom right
-	DotMatrixCarver* carver;	
-	int (*width)();
-	int (*height)();
-	int (*count)(FontSize*);	// how many chars included?
-	int (*carve)(Font* /* O - fonts carved */);		
-} DotMatrixRange;
-
-typedef struct {
 	size_t w;	// width
 	size_t h;	// height
 } FontSize;

@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BMP.h" />
+    <ClInclude Include="carve.h" />
     <ClInclude Include="DotMatrix.h" />
     <ClInclude Include="DotMatrixPot.h" />
     <ClInclude Include="OCRT.h" />
@@ -91,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BMP.cpp" />
+    <ClCompile Include="carve.cpp" />
     <ClCompile Include="DotMatrix.cpp" />
     <ClCompile Include="DotMatrixCarver.cpp" />
     <ClCompile Include="DotMatrixPot.cpp" />
