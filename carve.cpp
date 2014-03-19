@@ -14,9 +14,13 @@ carve(DotMatrixRange* range, Font* fonts)
 
 }
 
-static DotMatrixRow carveRow()
+static DotMatrixRow carveRow(DOTMATRIX* dots)
 {
-
+	DotMatrixPot start;
+	start.r = start.c = 0;
+	while(start.r == dots->r) {
+		
+	}
 }
 
 static DotMatrixRange
