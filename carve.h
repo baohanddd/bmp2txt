@@ -46,4 +46,13 @@ static DotMatrixRange			/* O - return range */
 range(DOTMATRIX* dm,			/* I - dots */
 	FontSize* size);			/* I - font size */
 
+static void
+dmpScanLH(DotMatrixPot* start);
+
+static DotMatrixPot
+dmpScanLV(DotMatrixPot* start, const FontSize* size);
+
+static DotMatrixPot
+dmpScanRV(const DotMatrixPot* start, const FontSize* size);
+
 #endif

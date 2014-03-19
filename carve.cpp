@@ -40,7 +40,21 @@ size_t count(DotMatrixRange* range)
 	return c;
 }
 
-int carve(DotMatrixRange* range, Font* fonts, size_t* found)
+void
+carve(const DOTMATRIX* dm, 
+	DotMatrixPot* start, 
+	DotMatrixRange* range)			/* O - A block of range */
+{
+	DotMatrixPot corner, bottom;
+	dmpScanLH(start);
+	corner = dmpScanLV(start, &size);
+	bottom = dmpScanRV(start, &size);
+	range->cpl = corner;
+	range->cpr = bottom;
+}
+
+int 
+carve(DotMatrixRange* range, Font* fonts, size_t* found)
 {
 	Font* font;
 	DotMatrixPot pot;
@@ -50,73 +64,63 @@ int carve(DotMatrixRange* range, Font* fonts, size_t* found)
 	if((fonts = (Font*)malloc(sizeof(Font)*n)) == NULL) return 3;
 	pot.c = range->cpl.c;
 	pot.r = range->cpr.r;
+	*found = 0;
 	for(c = 0; pot.c < range->cpr.c; ++c, pot.c += range->size->w) {
 		font = &fonts[c];
-		if(DotMatrix(&pot, &(range->cpr), dm, dots, range->size) != 0) return 4;
+		if(DotMatrix(&pot, &(range->cpr), dm, dots) != 0) return 4;
 		font->map = dots;
 		font->size = range->size;
+		++(*found);
 	}
 	return 0;
 }
 
 int 
-DotMatrix(DotMatrixPot* corner, DotMatrixPot* ep, const DOTMATRIX* dm, DOTMATRIX* odm, const FontSize* fs)
+DotMatrix(DotMatrixPot* corner, DotMatrixPot* bottom, const DOTMATRIX* dm, DOTMATRIX* odm)
 {
-	odm->r = fs->h;
-	odm->c = ep->c - corner->c;
+	odm->r = bottom->r - corner->r;
+	odm->c = bottom->c - corner->c;
 	size_t* rows;
-	size_t i, j = 0, m = 0, n, stop = corner->r + fs->h;
+	size_t i, j = 0, m = 0, n, stop = corner->r + odm->r;
 
 	if ((odm->map = (size_t**)malloc(sizeof(size_t*)* odm->r)) == NULL) return 3;
 
 	for (i = corner->r, n = 0; i < stop; ++i, n = 0) {
 		if ((rows = (size_t*)malloc(sizeof(size_t)* odm->c)) == NULL) return 3;
-		for (j = corner->c; j < ep->c; ++j) rows[n++] = dm->map[i][j];
+		for (j = corner->c; j < bottom->c; ++j) rows[n++] = dm->map[i][j];
 		odm->map[m++] = rows;
 	}
 	return 0;
 }
 
-static DotMatrixPot
+static void
 dmpScanLH(DotMatrixPot* start)	// scan dot matrix to left by horizontal
 {
-	DotMatrixPot pot;
-	size_t i = 0, j = 0;
-	for (i = start->r; i < dm->r; ++i) {
-		if (i == start->r) j = start->c;
-		else j = 0;
-		for (; j < dm->c; ++j)
-			if (dm->map[i][j] == 1) goto found;
+	for (; start->r < dm->r; ++start->r) {
+		for (; start->c < dm->c; ++start->c) { if (dm->map[start->r][start->c] == 1)  return; }
+		start->c = 0;
 	}
-
-	found:
-		pot.r = i;
-		pot.c = j;
-	return pot;
 }
 
 static DotMatrixPot
-dmpScanLV(DotMatrixPot* start, FontSize* size)
+dmpScanLV(DotMatrixPot* start, const FontSize* size)
 {
 	DotMatrixPot pot;
-	pot.c = pot.r = 0;
 	size_t i, j = start->c, stop = size->h + start->r;
-	if (dm->r < stop || dm->c == start->c) return pot;
+	if (dm->r < stop || dm->c == start->c) return ;
 
-	for (i = start->r; i < stop; ++i) {
+	for (i = start->r; start->r < stop; ++i) {
 		if (j == 0) break;
-		if (dm->map[i][j] == 1) {
-			--j;
-			i = start->r;
-		}
+		if (dm->map[i][j] == 1) { --j; i = start->r; }
 	}
+	start->c = ++j;
 	pot.r = start->r;
-	pot.c = ++j;
+	pot.c = start->c;
 	return pot;
 }
 
 static DotMatrixPot
-dmpScanRV(DotMatrixPot* start, FontSize* size)
+dmpScanRV(const DotMatrixPot* start, const FontSize* size)
 {
 	DotMatrixPot pot;
 	size_t limit = 0;
