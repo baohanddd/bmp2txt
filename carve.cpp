@@ -1,5 +1,40 @@
 #include "stdafx.h"
 
+int
+carve(const DOTMATRIX* dm, FontSize* size, Font* fonts, size_t* found)
+{
+	DotMatrixPot     pot = { 0, 0 };
+	DotMatrixPot    *start = &pot, *prev = &pot;
+	DotMatrixRange  *range;
+	DotMatrixRange **ranges, **tmp_ranges;
+	size_t n_range = 100, c_range = 0;
+
+	if((ranges = (DotMatrixRange**)malloc(sizeof(DotMatrixRange*)*n_range)) == NULL) return 3;
+
+	do {
+		prev = start;
+		carveRange(dm, start, size, range);
+		if(c_range == n_range) {
+			tmp_ranges = ranges;
+			if((ranges = (DotMatrixRange**)malloc(sizeof(DotMatrixRange*)*n_range*2)) == NULL) return 3;
+			
+
+		}
+		ranges[c_range++] = range;
+	} while(dmpCmp(prev, start));
+}
+
+static
+int geneRanges()
+{
+
+}
+
+static 
+int dmpCmp(DotMatrixPot* p1, DotMatrixPot* p2) {
+	return (p1->r == p2->r) && (p2->c == p2->c);
+}
+
 static DotMatrixRow carveRow(DOTMATRIX* dots)
 {
 	DotMatrixPot start;
@@ -7,19 +42,6 @@ static DotMatrixRow carveRow(DOTMATRIX* dots)
 	while(start.r == dots->r) {
 		
 	}
-}
-
-static DotMatrixRange
-range(FontSize* size)
-{
-	DotMatrixRange range;
-	DotMatrixPot start, end;
-	start = dmpScanLH(&start);
-	start = dmpScanLV(&start, size);
-	end   = dmpScanRV(&start, size);
-	range.cpl  = start;
-	range.cpr = end;
-	return range;
 }
 
 size_t width(DotMatrixRange* range)
@@ -31,26 +53,28 @@ size_t width(DotMatrixRange* range)
 
 size_t height(DotMatrixRange* range)
 {
-	return range->size->h;
+	// return range->size->h;
+	return 0;
 }
 
 size_t count(DotMatrixRange* range)
 {
-	size_t c = width(range) / range->size->w;
-	return c;
+	// size_t c = width(range) / range->size->w;
+	// return c;
 }
 
-void
-carve(const DOTMATRIX* dm, 
+int 
+carveRange(const DOTMATRIX* dm, 
 	DotMatrixPot* start, 
+	FontSize *size,
 	DotMatrixRange* range)			/* O - A block of range */
 {
-	DotMatrixPot corner, bottom;
+	if((range = (DotMatrixRange*)malloc(sizeof(DotMatrixRange))) == NULL) return 3;
+
 	dmpScanLH(start);
-	corner = dmpScanLV(start, &size);
-	bottom = dmpScanRV(start, &size);
-	range->cpl = corner;
-	range->cpr = bottom;
+	range->cpl = dmpScanLV(start, size);
+	range->cpr = dmpScanRV(start, size);
+	return 0;
 }
 
 int 

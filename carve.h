@@ -23,7 +23,7 @@ typedef struct {
 typedef struct {
 	DotMatrixPot cpl;	// top left
 	DotMatrixPot cpr;	// bottom right
-	FontSize* size;
+	// FontSize* size;
 } DotMatrixRange;
 
 typedef struct {
@@ -54,5 +54,8 @@ dmpScanLV(DotMatrixPot* start, const FontSize* size);
 
 static DotMatrixPot
 dmpScanRV(const DotMatrixPot* start, const FontSize* size);
+
+static int 
+dmpCmp(DotMatrixPot*, DotMatrixPot*);
 
 #endif
