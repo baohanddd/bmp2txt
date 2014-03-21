@@ -12,22 +12,10 @@ typedef struct {
 	size_t h;	// height
 } FONTSIZE;
 
-void
-dmInit(const PALLET* pallet);
+void dmInit(const PALLET* pallet);
+int getMatrix();
+void freeMatrix();
+void dotmat2File(FILE* fp);
 
-int 
-getMatrix();
-
-void
-freeMatrix();
-
-void
-dotmat2File(FILE* fp);
-
-int
-matCarve(DOTMATRIXPOT* corner, DOTMATRIXPOT* ep/* end point */, const DOTMATRIX* dm, DOTMATRIX* odm, const FONTSIZE* fs);
-
-int
-matCarveByChar(DOTMATRIX* dm, DOTMATRIX* fonts, FONTSIZE* size);
 
 #endif

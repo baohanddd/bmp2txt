@@ -1,15 +1,6 @@
 #ifndef __CARVE__
 #define __CARVE__
 
-static DOTMATRIX* dm;
-static FontSize size;
-
-static inline FontSize fsInit(int size) { 
-	FontSize fs;
-	fs.h = fs.w = size;
-	return fs;
-}
-
 typedef struct {
 	size_t r;	// row
 	size_t c;	// col
@@ -23,39 +14,27 @@ typedef struct {
 typedef struct {
 	DotMatrixPot cpl;	// top left
 	DotMatrixPot cpr;	// bottom right
-	// FontSize* size;
 } DotMatrixRange;
 
 typedef struct {
+	size_t w;	// width
+	size_t h;	// height
+} FontSize;
+
+typedef struct {
 	DOTMATRIX* map;
-	FontSize* size;
-	//int (*toFile)(TCHAR*);
-	//wchar_t (*getc)(FontLib*);
-	char* (*bin2hex)(DotMatrixPot*);
 } Font;
 
-int								/* O - How many ranges be found */
-carve(DOTMATRIX* dm,			/* I - dots */
-	DotMatrixRanges* ranges);	/* O - ranges */
-
-int								/* O - How many fonts be found */
-carve(DotMatrixRange* range,    /* I - a block of text range */
-	Font* fonts);				/* O - fonts */
-
-static DotMatrixRange			/* O - return range */
-range(DOTMATRIX* dm,			/* I - dots */
-	FontSize* size);			/* I - font size */
-
-static void
-dmpScanLH(DotMatrixPot* start);
-
-static DotMatrixPot
-dmpScanLV(DotMatrixPot* start, const FontSize* size);
-
-static DotMatrixPot
-dmpScanRV(const DotMatrixPot* start, const FontSize* size);
-
-static int 
-dmpCmp(DotMatrixPot*, DotMatrixPot*);
+int
+carve(DOTMATRIX* dm, FontSize* size, Font* fonts, size_t* found);
+static int dmpCmp(DotMatrixPot*, DotMatrixPot*);
+static size_t width(DotMatrixRange* range);
+static size_t count(DotMatrixRange* range, FontSize *size);
+static int carveRange(DOTMATRIX* dm, DotMatrixPot* start, FontSize *size, DotMatrixRange* range);
+static int carveFont(DOTMATRIX *dm, DotMatrixRange* range, Font* fonts, FontSize *size, size_t* found);
+static int DotMatrix(DotMatrixPot* corner, DotMatrixPot* bottom, const DOTMATRIX* dm, DOTMATRIX* odm);
+static void dmpScanLH(DOTMATRIX *dm, DotMatrixPot* start);
+static DotMatrixPot dmpScanLV(DOTMATRIX *dm, DotMatrixPot* start, const FontSize* size);
+static DotMatrixPot dmpScanRV(DOTMATRIX *dm, const DotMatrixPot* start, const FontSize* size);
 
 #endif

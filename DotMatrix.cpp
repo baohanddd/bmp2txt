@@ -52,57 +52,6 @@ dotmat2File(FILE* fp)
 	}
 }
 
-DOTMATRIXPOT
-cornerTL()	/* Top & Left */
-{
-
-}
-
-int
-matCarve(DOTMATRIXPOT* corner, DOTMATRIXPOT* ep/* end point */, const DOTMATRIX* dm, DOTMATRIX* odm, const FONTSIZE* fs)
-{
-	odm->r = fs->h;
-	odm->c = ep->c - corner->c;
-	size_t* rows;
-	size_t i, j = 0, m = 0, n, stop = corner->r + fs->h;
-
-	if ((odm->map = (size_t**)malloc(sizeof(size_t*)* odm->r)) == NULL) return 3;
-
-	for (i = corner->r, n = 0; i < stop; ++i, n = 0) {
-		if ((rows = (size_t*)malloc(sizeof(size_t)* odm->c)) == NULL) return 3;
-		for (j = corner->c; j < ep->c; ++j) rows[n++] = dm->map[i][j];
-		odm->map[m++] = rows;
-	}
-	return 0;
-}
-
-int
-matCarveByChar(DOTMATRIX* dm, FONTSIZE* size)
-{
-	DOTMATRIX** fonts;
-	DOTMATRIX font;
-	size_t num = dm->c / size->w;
-	size_t* row;
-	size_t i, j, n, ww, p, m = 0; // ww: word width
-
-	if ((fonts = (DOTMATRIX**)malloc(sizeof(DOTMATRIX*)*num)) == NULL) return 3;
-
-	if (num == 0) return 1;
-	for (n = 0; n < num; ++n) {
-		font.r = size->h;
-		font.c = size->w;
-		if ((font.map = (size_t**)malloc(sizeof(size_t*)*font.r)) == NULL) return 3;
-		for (i = 0, p = 0; i < font.r; ++i, p = 0) {
-			if ((row = (size_t*)malloc(sizeof(size_t)*font.c)) == NULL) return 3;
-			ww = n * font.c + font.c;
-			for (j = n * font.c; j < ww; ++j) row[p++] = dm->map[i][j];
-			font.map[m++] = row;
-		}
-		fonts[n] = &font;
-	}
-	return 0;
-}
-
 int
 bin2hex(DOTMATRIX* font)
 {

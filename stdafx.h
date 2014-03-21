@@ -19,7 +19,7 @@
 #include "tools.h"
 #include "DotMatrix.h"
 #include "DotMatrixPot.h"
-#include "scan.h"
+//#include "scan.h"
 #include "carve.h"
 
 // TODO:  在此处引用程序需要的其他头文件
