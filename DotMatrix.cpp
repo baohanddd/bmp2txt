@@ -52,8 +52,19 @@ dotmat2File(FILE* fp)
 	}
 }
 
-int
-bin2hex(DOTMATRIX* font)
+char*
+bin2hex(const Font* font)
 {
+	size_t i, j, size = font->c * font->r;
+	char *bin, *hex;
+	if ((bin = (char*)malloc(sizeof(char)*size)) == NULL) return ;
+	if ((hex = (char*)malloc(sizeof(char)*size/4)) == NULL) return ;
+
+	for (i = 0; i < font->r; ++i)
+		for (j = 0; j < font->c; ++j)
+			bin[i + j] = font->map[i][j];
+
+	for (i = 0; i < size; i += 4);
+
 	return 0;
 }

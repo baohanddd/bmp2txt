@@ -72,7 +72,7 @@ carveFont(DOTMATRIX *dm, DotMatrixRange* range, Font* fonts, FontSize *size, siz
 	for(c = 0; pot.c < range->cpr.c; ++c, pot.c += size->w) {
 		font = &fonts[c];
 		if(DotMatrix(&pot, &(range->cpr), dm, dots) != 0) return 4;
-		font->map = dots;
+		font = dots;
 		++(*found);
 	}
 	return 0;

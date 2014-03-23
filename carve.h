@@ -21,9 +21,12 @@ typedef struct {
 	size_t h;	// height
 } FontSize;
 
+/*
 typedef struct {
 	DOTMATRIX* map;
 } Font;
+*/
+typedef DOTMATRIX Font;
 
 int
 carve(DOTMATRIX* dm, FontSize* size, Font* fonts, size_t* found);
